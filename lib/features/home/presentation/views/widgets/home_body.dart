@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:expense_tracker/features/home/presentation/views/widgets/tranaction_card.dart';
 import 'package:flutter/material.dart';
 
 class HomeBody extends StatelessWidget {
@@ -182,6 +183,37 @@ class HomeBody extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+            ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Transactions',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  'view All',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.separated(
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemCount: 10,
+                itemBuilder: (context, index) => const TranactionCard(),
               ),
             ),
           ],
