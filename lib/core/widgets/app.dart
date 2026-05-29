@@ -16,6 +16,7 @@ class App extends StatelessWidget {
           primary: const Color(0xff00b2e7),
           secondary: const Color(0xffe064f7),
           tertiary: const Color(0xffff8d6c),
+          outline: Colors.grey,
         ),
       ),
       home: const HomeView(),
