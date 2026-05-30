@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:expense_tracker/features/home/presentation/views/widgets/home_body.dart';
+import 'package:expense_tracker/features/home/presentation/views/widgets/statistics_body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +18,10 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentIndex == 0
-          ? const HomeBody()
-          : const Center(child: Text('Stats')),
-
+      body: IndexedStack(
+        index: currentIndex,
+        children: const [HomeBody(), StatisticsBody()],
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BottomNavigationBar(
