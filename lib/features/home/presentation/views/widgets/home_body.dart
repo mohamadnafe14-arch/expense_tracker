@@ -10,7 +10,7 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
