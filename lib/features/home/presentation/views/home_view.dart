@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:expense_tracker/features/add_expense/presentation/views/add_expense_view.dart';
 import 'package:expense_tracker/features/home/presentation/views/widgets/home_body.dart';
 import 'package:expense_tracker/features/home/presentation/views/widgets/statistics_body.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +47,12 @@ class _HomeViewState extends State<HomeView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddExpenseView()),
+          );
+        },
         shape: const CircleBorder(),
         child: Container(
           width: 60,
