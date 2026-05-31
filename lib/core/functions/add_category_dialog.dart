@@ -92,7 +92,6 @@ Future<CategoryModel?> addCategoryDialog(BuildContext context) async {
                         ),
 
                         const SizedBox(height: 16),
-
                         InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () async {

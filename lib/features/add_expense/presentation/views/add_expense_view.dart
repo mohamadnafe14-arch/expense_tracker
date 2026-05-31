@@ -1,3 +1,4 @@
+import 'package:expense_tracker/features/add_expense/presentation/views/widgets/add_expenses_body.dart';
 import 'package:flutter/material.dart';
 
 class AddExpenseView extends StatelessWidget {
@@ -5,6 +6,6 @@ class AddExpenseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(body: AddExpensesBody());
   }
 }
