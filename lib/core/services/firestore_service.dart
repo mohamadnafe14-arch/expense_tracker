@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/constants/firestore_constants.dart';
 import 'package:expense_tracker/core/exceptions/generic_exceptions.dart';
 import 'package:expense_tracker/features/add_expense/data/models/expense_model.dart';
 
@@ -8,9 +9,9 @@ class FirestoreService {
   FirestoreService(this.firebaseServices);
   Future<ExpenseModel> addExpense(ExpenseModel expense) async {
     try {
-      await firebaseServices.collection('expenses').add(expense.toMap());
+      await firebaseServices.collection(ref).add(expense.toMap());
       final result = await firebaseServices
-          .collection('expenses')
+          .collection(ref)
           .where('id', isEqualTo: expense.id)
           .get();
       return ExpenseModel.fromMap(result.docs.first.data());
@@ -21,7 +22,7 @@ class FirestoreService {
 
   Future<List<ExpenseModel>> getExpenses() async {
     try {
-      final result = await firebaseServices.collection('expenses').get();
+      final result = await firebaseServices.collection(ref).get();
       return result.docs
           .map((doc) => ExpenseModel.fromMap(doc.data()))
           .toList();
