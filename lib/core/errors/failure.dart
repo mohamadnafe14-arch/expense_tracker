@@ -3,3 +3,7 @@ abstract class Failure {
 
   Failure(this.message);
 }
+
+class GenericFailure extends Failure {
+  GenericFailure(super.message);
+}
