@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@immutable
 class CategoryModel {
   final String name;
   final IconData icon;
