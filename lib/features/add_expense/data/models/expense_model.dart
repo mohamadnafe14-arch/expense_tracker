@@ -7,11 +7,13 @@ class ExpenseModel {
   final double amount;
   final String date;
   final List<CategoryModel> categories;
+  final String transactionType;
   const ExpenseModel({
     required this.id,
     required this.amount,
     required this.date,
     required this.categories,
+    required this.transactionType,
   });
   Map<String, dynamic> toMap() {
     return {
@@ -19,6 +21,7 @@ class ExpenseModel {
       'amount': amount,
       'date': date,
       'categories': categories.map((category) => category.toMap()).toList(),
+      'transactionType': transactionType,
     };
   }
 
@@ -30,6 +33,7 @@ class ExpenseModel {
       categories: (map['categories'] as List)
           .map((category) => CategoryModel.fromMap(category))
           .toList(),
+      transactionType: map['transactionType'],
     );
   }
 }

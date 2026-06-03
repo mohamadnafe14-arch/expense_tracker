@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/functions/add_category_dialog.dart';
 import 'package:expense_tracker/core/functions/convert_date_to_string.dart';
 import 'package:expense_tracker/core/functions/show_scaffold.dart';
+import 'package:expense_tracker/core/functions/show_success_snack_bar.dart';
 import 'package:expense_tracker/features/add_expense/data/models/category_model.dart';
 import 'package:expense_tracker/features/add_expense/presentation/views/widgets/show_category_chip_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class _AddExpensesBodyState extends State<AddExpensesBody> {
   late TextEditingController _dateController;
   late GlobalKey<FormState> _formKey;
   List<CategoryModel> categories = [];
+  String? transactionType;
+
   @override
   initState() {
     super.initState();
@@ -77,7 +80,6 @@ class _AddExpensesBodyState extends State<AddExpensesBody> {
               GestureDetector(
                 onTap: () async {
                   final category = await addCategoryDialog(context);
-
                   if (category != null) {
                     setState(() {
                       categories.add(category);
@@ -164,6 +166,35 @@ class _AddExpensesBodyState extends State<AddExpensesBody> {
                 },
               ),
               SizedBox(height: 25),
+              Column(
+                children: [
+                  RadioListTile<String>(
+                    title: const Text("Deposit"),
+                    value: "Deposit",
+                    // ignore: deprecated_member_use
+                    groupValue: transactionType,
+                    // ignore: deprecated_member_use
+                    onChanged: (value) {
+                      setState(() {
+                        transactionType = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: const Text("Withdraw"),
+                    value: "Withdraw",
+                    // ignore: deprecated_member_use
+                    groupValue: transactionType,
+                    // ignore: deprecated_member_use
+                    onChanged: (value) {
+                      setState(() {
+                        transactionType = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -183,6 +214,11 @@ class _AddExpensesBodyState extends State<AddExpensesBody> {
                         );
                       }
                       showScaffold(context, "Expense added successfully");
+                      if (transactionType == null) {
+                        showScaffold(context, "Please select transaction type");
+                        return;
+                      }
+                      showSuccessToast(context, "Expense added successfully");
                     }
                   },
                   child: const Text('Add'),
