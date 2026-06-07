@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class ExpenseModel {
-  final int id;
+  final String id;
   final double amount;
   final String date;
   final List<CategoryModel> categories;
@@ -28,7 +28,7 @@ class ExpenseModel {
   factory ExpenseModel.fromMap(Map<String, dynamic> map) {
     return ExpenseModel(
       id: map['id'],
-      amount: map['amount'],
+      amount: (map['amount'] as num).toDouble(),
       date: map['date'],
       categories: (map['categories'] as List)
           .map((category) => CategoryModel.fromMap(category))

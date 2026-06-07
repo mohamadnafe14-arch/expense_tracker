@@ -20,12 +20,10 @@ class FirestoreService {
     }
   }
 
-  Future<List<ExpenseModel>> getExpenses() async {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getExpenses() async {
     try {
-      final result = await firebaseServices.collection(ref).get();
-      return result.docs
-          .map((doc) => ExpenseModel.fromMap(doc.data()))
-          .toList();
+      final result = firebaseServices.collection(ref).snapshots();
+      return result;
     } on FirebaseException catch (e) {
       _handleFirestoreException(e);
     }

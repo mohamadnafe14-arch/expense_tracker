@@ -1,74 +1,97 @@
+import 'package:expense_tracker/features/home/data/models/group_data_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class TranactionsChart extends StatefulWidget {
-  const TranactionsChart({super.key});
+class TranactionsChart extends StatelessWidget {
+  const TranactionsChart({super.key, required this.expenses});
 
-  @override
-  State<TranactionsChart> createState() => _TranactionsChartState();
-}
+  final List<GroupDataModel> expenses;
 
-class _TranactionsChartState extends State<TranactionsChart> {
   @override
   Widget build(BuildContext context) {
-    return BarChart(tranactionData());
+    return SizedBox(height: 250, child: BarChart(_transactionData(context)));
   }
 
-  BarChartData tranactionData() {
-    List<BarChartGroupData> barGroups = [
-      createBarGroup(0, 5),
-      createBarGroup(1, 8),
-      createBarGroup(2, 6),
-      createBarGroup(3, 4),
-      createBarGroup(4, 7),
-      createBarGroup(5, 6),
-    ];
+  BarChartData _transactionData(BuildContext context) {
+    final maxY = expenses.isEmpty
+        ? 10.0
+        : expenses.map((e) => e.y).reduce((a, b) => a > b ? a : b);
+
     return BarChartData(
+      maxY: maxY * 1.2,
+      borderData: FlBorderData(show: false),
+
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        horizontalInterval: maxY / 5,
+      ),
+
       titlesData: FlTitlesData(
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            interval: maxY / 5,
+            getTitlesWidget: _leftTitles,
+          ),
+        ),
+
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: titleWidgets,
+            getTitlesWidget: _bottomTitles,
           ),
         ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: leftTitles,
-          ),
-        ),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
-      barGroups: barGroups,
-      borderData: FlBorderData(show: false),
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: false,
-        horizontalInterval: 2,
+
+      barGroups: [
+        for (int i = 0; i < expenses.length; i++)
+          _createBarGroup(context, i, expenses[i].y),
+      ],
+    );
+  }
+
+  Widget _bottomTitles(double value, TitleMeta meta) {
+    final index = value.toInt();
+
+    if (index < 0 || index >= expenses.length) {
+      return const SizedBox();
+    }
+
+    return SideTitleWidget(
+      meta: meta,
+      child: Text(
+        expenses[index].x.toString(),
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
       ),
     );
   }
 
-  Widget titleWidgets(double value, TitleMeta meta) {
+  static Widget _leftTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
       meta: meta,
       child: Text(
         value.toInt().toString(),
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
       ),
     );
   }
 
-  BarChartGroupData createBarGroup(int x, double y) {
+  BarChartGroupData _createBarGroup(BuildContext context, int x, double y) {
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           toY: y,
-          width: 16,
+          width: 18,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12),
             topRight: Radius.circular(12),
@@ -82,23 +105,8 @@ class _TranactionsChartState extends State<TranactionsChart> {
               Theme.of(context).colorScheme.tertiary,
             ],
           ),
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            toY: 10,
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          ),
         ),
       ],
     );
   }
-}
-
-Widget leftTitles(double value, TitleMeta meta) {
-  return SideTitleWidget(
-    meta: meta,
-    child: Text(
-      value.toInt().toString(),
-      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-    ),
-  );
 }

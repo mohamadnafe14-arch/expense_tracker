@@ -1,10 +1,11 @@
 import 'dart:math';
 
+import 'package:expense_tracker/features/home/data/models/calculate_model.dart';
 import 'package:flutter/material.dart';
 
 class CalculationWidget extends StatelessWidget {
-  const CalculationWidget({super.key});
-
+  const CalculationWidget({super.key, required this.calculateModel});
+  final CalculateModel calculateModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,8 +43,8 @@ class CalculationWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            '\$1,000',
+          Text(
+            calculateModel.balance,
             style: TextStyle(
               color: Colors.white,
               fontSize: 40,
@@ -75,8 +76,8 @@ class CalculationWidget extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Text(
-                        '\$100',
+                      Text(
+                        calculateModel.income,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -109,8 +110,8 @@ class CalculationWidget extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Text(
-                        '\$100',
+                      Text(
+                        calculateModel.outcome,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

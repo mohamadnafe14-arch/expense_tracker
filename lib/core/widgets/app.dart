@@ -1,5 +1,9 @@
+import 'package:expense_tracker/core/utils/dependecy_injection.dart';
+import 'package:expense_tracker/features/home/data/repos/home_repo.dart';
+import 'package:expense_tracker/features/home/presentation/viewmodel/home_cubit/home_cubit.dart';
 import 'package:expense_tracker/features/home/presentation/views/home_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,7 +23,10 @@ class App extends StatelessWidget {
           outline: Colors.grey,
         ),
       ),
-      home: const HomeView(),
+      home: BlocProvider(
+        create: (context) => HomeCubit(homeRepo: getIt<HomeRepo>())..loadHome(),
+        child: const HomeView(),
+      ),
     );
   }
 }

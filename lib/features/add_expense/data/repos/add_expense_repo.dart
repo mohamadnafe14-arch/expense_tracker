@@ -7,5 +7,4 @@ abstract class AddExpenseRepo {
     required ExpenseModel expense,
   });
 
-  Future<Either<Failure, List<ExpenseModel>>> getExpenses();
 }

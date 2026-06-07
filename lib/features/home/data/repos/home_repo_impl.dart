@@ -1,32 +1,36 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/errors/failure.dart';
 import 'package:expense_tracker/core/errors/firebase_failure.dart';
 import 'package:expense_tracker/core/exceptions/generic_exceptions.dart';
 import 'package:expense_tracker/core/services/firestore_service.dart';
-import 'package:expense_tracker/features/add_expense/data/models/expense_model.dart';
-import 'package:expense_tracker/features/add_expense/data/repos/add_expense_repo.dart';
+import 'package:expense_tracker/features/home/data/repos/home_repo.dart';
 import 'package:fpdart/fpdart.dart';
 
-class AddExpenseRepoImple implements AddExpenseRepo {
-  final FirestoreService firestoreServices;
+class HomeRepoImpl implements HomeRepo {
+  final FirestoreService firestoreService;
 
-  AddExpenseRepoImple({required this.firestoreServices});
+  HomeRepoImpl({required this.firestoreService});
+
   @override
-  Future<Either<Failure, ExpenseModel>> addExpense({
-    required ExpenseModel expense,
-  }) async {
+  Future<Either<Failure, Stream<QuerySnapshot<Map<String, dynamic>>>>>
+  getExpenses() async {
     try {
-      final result = await firestoreServices.addExpense(expense);
+      final result = await firestoreService.getExpenses();
+      log(result.toString());
       return Right(result);
     } catch (e) {
       if (e is FireStoreException) {
+        log(e.message);
         return Left(FirebaseFailure(e.message));
       } else {
+        log(e.toString());
         return Left(
           GenericFailure('An unexpected error occurred: ${e.toString()}'),
         );
       }
     }
   }
-
-
 }

@@ -187,6 +187,7 @@ Future<CategoryModel?> addCategoryDialog(BuildContext context) async {
                       name: nameController.text.trim(),
                       icon: selectedIcon!,
                       color: selectedColor,
+                      iconFontFamily: selectedIcon!.fontFamily!,
                     ),
                   );
                 },

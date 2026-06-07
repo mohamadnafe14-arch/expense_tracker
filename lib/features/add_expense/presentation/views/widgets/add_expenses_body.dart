@@ -1,10 +1,14 @@
 import 'package:expense_tracker/core/functions/add_category_dialog.dart';
 import 'package:expense_tracker/core/functions/convert_date_to_string.dart';
-import 'package:expense_tracker/core/functions/show_scaffold.dart';
+import 'package:expense_tracker/core/functions/show_error_toast.dart';
 import 'package:expense_tracker/core/functions/show_success_snack_bar.dart';
 import 'package:expense_tracker/features/add_expense/data/models/category_model.dart';
+import 'package:expense_tracker/features/add_expense/data/models/expense_model.dart';
+import 'package:expense_tracker/features/add_expense/presentation/viewmodel/add_expense_cubit/add_expense_cubit.dart';
 import 'package:expense_tracker/features/add_expense/presentation/views/widgets/show_category_chip_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 class AddExpensesBody extends StatefulWidget {
   const AddExpensesBody({super.key});
@@ -198,30 +202,56 @@ class _AddExpensesBodyState extends State<AddExpensesBody> {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Colors.black,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      if (categories.isEmpty) {
-                        showScaffold(
-                          context,
-                          "Please select one category at least",
-                        );
-                      }
-                      showScaffold(context, "Expense added successfully");
-                      if (transactionType == null) {
-                        showScaffold(context, "Please select transaction type");
-                        return;
-                      }
+                child: BlocConsumer<AddExpenseCubit, AddExpenseState>(
+                  listener: (context, state) {
+                    if (state is AddExpenseSuccess) {
                       showSuccessToast(context, "Expense added successfully");
+                      Navigator.pop(context);
+                    }
+                    if (state is AddExpenseFailure) {
+                      showErrorToast(context: context, message: state.message);
                     }
                   },
-                  child: const Text('Add'),
+                  builder: (context, state) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (categories.isEmpty) {
+                            showSuccessToast(
+                              context,
+                              "Please select one category at least",
+                            );
+                            return;
+                          }
+                          if (transactionType == null) {
+                            showSuccessToast(
+                              context,
+                              "Please select transaction type",
+                            );
+                            return;
+                          }
+                          context.read<AddExpenseCubit>().addExpense(
+                            ExpenseModel(
+                              amount: double.parse(_amountController.text),
+                              id: const Uuid().v4(),
+                              date: _dateController.text,
+                              categories: categories,
+                              transactionType: transactionType!,
+                            ),
+                          );
+                        }
+                      },
+                      child: state is AddExpenseLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Add Expense'),
+                    );
+                  },
                 ),
               ),
             ],

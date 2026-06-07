@@ -1,50 +1,98 @@
+import 'package:expense_tracker/features/add_expense/data/models/expense_model.dart';
 import 'package:flutter/material.dart';
 
 class TranactionCard extends StatelessWidget {
-  const TranactionCard({super.key});
+  final ExpenseModel expense;
+
+  const TranactionCard({super.key, required this.expense});
 
   @override
   Widget build(BuildContext context) {
+    final isIncome = expense.transactionType == 'Deposit';
+
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20),
-      height: 100,
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.yellow.shade700,
-                child: Icon(
-                  Icons.food_bank,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text('Expense', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
+          CircleAvatar(
+            radius: 25,
+            backgroundColor: expense.categories.isNotEmpty
+                ? expense.categories.first.color.withValues(alpha: 0.2)
+                : Colors.grey.shade200,
+            child: expense.categories.isNotEmpty
+                ? Icon(
+                    expense.categories.first.icon,
+                    color: expense.categories.first.color,
+                  )
+                : const Icon(Icons.category),
           ),
-          Column(
-            children: [
-              Text(
-                '-\$200',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-              ),
-              Text(
-                'Category',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.outline,
-                  fontSize: 12,
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  expense.date,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 8),
+
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: expense.categories.map((category) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: category.color.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(category.icon, size: 14, color: category.color),
+                          const SizedBox(width: 4),
+                          Text(
+                            category.name,
+                            style: TextStyle(
+                              color: category.color,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          Text(
+            '${isIncome ? '+' : '-'}\$${expense.amount.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isIncome ? Colors.green : Colors.red,
+            ),
           ),
         ],
       ),
